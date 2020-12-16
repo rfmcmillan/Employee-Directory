@@ -1,6 +1,6 @@
 const gallery = document.querySelector('#gallery');
 const card = document.querySelector('.card');
-const imageContainer = document.querySelector('.card-img')
+const imageContainer = document.querySelector('.card-img');
 
 // create a 'no results message' that will be displayed if nothing appears in the search results
 
@@ -13,15 +13,24 @@ wholePage.appendChild(noResultsMsg);
 // FETCH FUNCTIONS
 // --------------------------------------
 
+// this function will get the requested data from the specified URL
+
 function fetchData(url) {
    return fetch(url)
+      // it will then check to make sure that the status is ok
       .then(checkStatus)
+      // it will then parse the json data and return a promise if there aren't any errors
       .then(result => result.json())
+      // this handles a rejected promise
       .catch(error => console.log('Looks like something went wrong', error))     
       
    }
-
-let employeePromise = fetchData('https://randomuser.me/api/?results=12&nat=us')
+// this gets data for 12 random users from the U.S. from the randomuser API
+let employeePromise = fetchData('https://randomuser.me/api/?results=12&nat=us');
+/* 
+once the promise is fulfilled, the array of user objects is accessed from within 
+the results of the fulfilled promise and set to a new variable called employeeData.
+ */
 employeePromise
    .then(data => {
       const employeeData = data.results;
@@ -55,13 +64,13 @@ function generateCard(input) {
          <h3 id="name" class="card-name cap">${input.name.first} ${input.name.last}</h3>
          <p class="card-text">${input.email}</p>
          <p class="card-text cap">${input.location.city}, ${input.location.state}</p>
-      </div>`
+      </div>`;
       
+   gallery.appendChild(newDiv);
    
-   gallery.appendChild(newDiv)
    newDiv.addEventListener('click', (event) => {
-      let modal = document.querySelector(`#${input.name.first}-${input.name.last}`)
-      modal.style.display = 'block'
+      let modal = document.querySelector(`#${input.name.first}-${input.name.last}`);
+      modal.style.display = 'block';
    })
 }
 
@@ -73,7 +82,7 @@ function generateModal(input) {
    const newModal = document.createElement('div');
    newModal.style.display = 'none';
    newModal.className = 'modal-container';
-   newModal.id = `${input.name.first}-${input.name.last}`
+   newModal.id = `${input.name.first}-${input.name.last}`;
    newModal.innerHTML = `
    <div class="modal">
    <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
@@ -91,37 +100,41 @@ function generateModal(input) {
          <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
          <button type="button" id="modal-next" class="modal-next btn">Next</button>
       </div>
-   </div>`
-   let newBtn = newModal.querySelector('#modal-close-btn');
+   </div>`;
    
-   newBtn.addEventListener('click', () => {
+   // creates the 'close' button
+   let closeBtn = newModal.querySelector('#modal-close-btn');
+   
+   closeBtn.addEventListener('click', () => {
       let modal = document.querySelector(`#${input.name.first}-${input.name.last}`);
       modal.style.display = 'none';
    })
 
+   // creates the 'previous' button
    let prevBtn = newModal.querySelector('#modal-prev');
 
    prevBtn.addEventListener('click', () => {
       let modal = document.querySelector(`#${input.name.first}-${input.name.last}`);
       if (modal.previousElementSibling.previousElementSibling) {
-         modal.style.display = 'none'
+         modal.style.display = 'none';
          let prevModal = modal.previousElementSibling.previousElementSibling;
          prevModal.style.display = 'block'; 
       }
    })
-
+   
+   // creates the 'next' button
    let nextBtn = newModal.querySelector('#modal-next');
-
+   
    nextBtn.addEventListener('click', () => {
       let modal = document.querySelector(`#${input.name.first}-${input.name.last}`);
       if (modal.nextElementSibling) {
-         modal.style.display = 'none'
+         modal.style.display = 'none';
          let nextModal = modal.nextElementSibling.nextElementSibling;
          nextModal.style.display = 'block';
       }
    })
 
-   gallery.appendChild(newModal)
+   gallery.appendChild(newModal);
 }
 
 // ------------------------------------------
@@ -129,14 +142,14 @@ function generateModal(input) {
 // ------------------------------------------
 
 function addSearch () {
-   // create variable to hold header
+   // create variable to hold search input
    const searchContainer = document.querySelector('.search-container');
    searchContainer.innerHTML = `
       <form action="#" method="get">
          <input type="search" id="search-input" class="search-input" placeholder="Search...">
          <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
       </form>
-   `
+   `;
 };
 
 
@@ -144,18 +157,19 @@ function addSearch () {
 // create function to perform search - two parameters: searchInput and the promise that is return from the fetch request
 function searchFunc (searchTerm, promise) {
    // clear all previous cards
-   let cards = Array.from(gallery.children)
-         cards.forEach(card => card.remove())   
+   let cards = Array.from(gallery.children);
+   cards.forEach(card => card.remove());
    // make an empty array to be the starting point for a new array of students that meet the search criteria
-         let newNamesArray = [];
+   let newNamesArray = [];
 
+   // access the same randomusers that are used when the page is loaded and use for the search results
    promise
    .then(data => {
       const employeeData = data.results;
       let fullNamesArray = [];
       // create an array of full names
       for (let i = 0; i < employeeData.length; i++) {
-         fullNamesArray.push(`${employeeData[i].name.first} ${employeeData[i].name.last}`)
+         fullNamesArray.push(`${employeeData[i].name.first} ${employeeData[i].name.last}`);
       }
       // check to see if the search input is included in any of the names of the FullNamesArray
       // if it is included, add that employee's object to newNamesArray
@@ -183,18 +197,18 @@ for (let i = 0; i < newNamesArray.length; i++) {
                <h3 id="name" class="card-name cap">${newNamesArray[i].name.first} ${newNamesArray[i].name.last}</h3>
                <p class="card-text">${newNamesArray[i].email}</p>
                <p class="card-text cap">${newNamesArray[i].location.city}, ${newNamesArray[i].location.state}</p>
-            </div>`
+            </div>`;
         
-         gallery.appendChild(newDiv)
+         gallery.appendChild(newDiv);
          newDiv.addEventListener('click', (event) => {
-            let modal = document.querySelector(`#${newNamesArray[i].name.first}-${newNamesArray[i].name.last}`)
-            modal.style.display = 'block'
+            let modal = document.querySelector(`#${newNamesArray[i].name.first}-${newNamesArray[i].name.last}`);
+            modal.style.display = 'block';
          })
 // generates modals for the search results
          const newModal = document.createElement('div');
          newModal.style.display = 'none';
          newModal.className = 'modal-container';
-         newModal.id = `${newNamesArray[i].name.first}-${newNamesArray[i].name.last}`
+         newModal.id = `${newNamesArray[i].name.first}-${newNamesArray[i].name.last}`;
          newModal.innerHTML = `
          <div class="modal">
          <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
@@ -212,50 +226,50 @@ for (let i = 0; i < newNamesArray.length; i++) {
             <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
             <button type="button" id="modal-next" class="modal-next btn">Next</button>
             </div>
-         </div>`
-         let newBtn = newModal.querySelector('#modal-close-btn');
+         </div>`;
          
-         newBtn.addEventListener('click', () => {
-            let modal = document.querySelector(`#${newNamesArray[i].name.first}-${newNamesArray[i].name.last}`)
-            modal.style.display = 'none'
-         })
-
+         // creates the 'close' button
+         let closeBtn = newModal.querySelector('#modal-close-btn');
+         
+         closeBtn.addEventListener('click', () => {
+            let modal = document.querySelector(`#${newNamesArray[i].name.first}-${newNamesArray[i].name.last}`);
+            modal.style.display = 'none';
+         });
+         
+         // creates the 'previous' button
          let prevBtn = newModal.querySelector('#modal-prev');
 
          prevBtn.addEventListener('click', () => {
             let modal = document.querySelector(`#${newNamesArray[i].name.first}-${newNamesArray[i].name.last}`);
             if (modal.previousElementSibling.previousElementSibling) {
-               modal.style.display = 'none'
+               modal.style.display = 'none';
                let prevModal = modal.previousElementSibling.previousElementSibling;
                prevModal.style.display = 'block'; 
-               // modal = modal.previousElementSibling.previousElementSibling
             }
-         })
-
+         });
+         // creates the 'next' button
          let nextBtn = newModal.querySelector('#modal-next');
 
          nextBtn.addEventListener('click', () => {
             let modal = document.querySelector(`#${newNamesArray[i].name.first}-${newNamesArray[i].name.last}`);
             if (modal.nextElementSibling) {
-               modal.style.display = 'none'
+               modal.style.display = 'none';
                let nextModal = modal.nextElementSibling.nextElementSibling;
                nextModal.style.display = 'block';
-               // modal = modal.nextElementSibling.nextElementSibling
             }
-         })
+         });
 
-         gallery.appendChild(newModal)
+         gallery.appendChild(newModal);
       }
-         // if there are no search results, change the text content of the NoResultMsg to equal 'No results found'.
+      // if there are no search results, change the text content of the NoResultMsg to equal 'No results found'.
       if (newNamesArray.length === 0) {
          noResultsMsg.textContent = 'No results found';
       } else {
-         noResultsMsg.textContent = ''
+         noResultsMsg.textContent = '';
       }
-   // --------------------------------------
-   })
+   });
 }
-addSearch()
+addSearch();
 
 // variable to hold the search input
 const search = document.querySelector('#search-input');
