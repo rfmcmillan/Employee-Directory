@@ -56,6 +56,7 @@ function generateCard(input) {
          <p class="card-text">${input.email}</p>
          <p class="card-text cap">${input.location.city}, ${input.location.state}</p>
       </div>`
+      
    
    gallery.appendChild(newDiv)
    newDiv.addEventListener('click', (event) => {
@@ -86,13 +87,38 @@ function generateModal(input) {
          <p class="modal-text">${input.location.street.number} ${input.location.street.name}, ${input.location.city}, ${input.location.state} ${input.location.postcode}</p>
          <p class="modal-text">Birthday: ${input.dob.date.slice(5,7)}/${input.dob.date.slice(8,10)}/${input.dob.date.slice(0,4)}</p>
       </div>
-      
+      <div class="modal-btn-container">
+         <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+         <button type="button" id="modal-next" class="modal-next btn">Next</button>
+      </div>
    </div>`
    let newBtn = newModal.querySelector('#modal-close-btn');
    
    newBtn.addEventListener('click', () => {
-      let modal = document.querySelector(`#${input.name.first}-${input.name.last}`)
-      modal.style.display = 'none'
+      let modal = document.querySelector(`#${input.name.first}-${input.name.last}`);
+      modal.style.display = 'none';
+   })
+
+   let prevBtn = newModal.querySelector('#modal-prev');
+
+   prevBtn.addEventListener('click', () => {
+      let modal = document.querySelector(`#${input.name.first}-${input.name.last}`);
+      if (modal.previousElementSibling.previousElementSibling) {
+         modal.style.display = 'none'
+         let prevModal = modal.previousElementSibling.previousElementSibling;
+         prevModal.style.display = 'block'; 
+      }
+   })
+
+   let nextBtn = newModal.querySelector('#modal-next');
+
+   nextBtn.addEventListener('click', () => {
+      let modal = document.querySelector(`#${input.name.first}-${input.name.last}`);
+      if (modal.nextElementSibling) {
+         modal.style.display = 'none'
+         let nextModal = modal.nextElementSibling.nextElementSibling;
+         nextModal.style.display = 'block';
+      }
    })
 
    gallery.appendChild(newModal)
@@ -182,13 +208,40 @@ for (let i = 0; i < newNamesArray.length; i++) {
                <p class="modal-text">${newNamesArray[i].location.street.number} ${newNamesArray[i].location.street.name}, ${newNamesArray[i].location.city}, ${newNamesArray[i].location.state} ${newNamesArray[i].location.postcode}</p>
                <p class="modal-text">Birthday: ${newNamesArray[i].dob.date.slice(5,7)}/${newNamesArray[i].dob.date.slice(8,10)}/${newNamesArray[i].dob.date.slice(0,4)}</p>
             </div>
-         
+            <div class="modal-btn-container">
+            <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+            <button type="button" id="modal-next" class="modal-next btn">Next</button>
+            </div>
          </div>`
          let newBtn = newModal.querySelector('#modal-close-btn');
          
          newBtn.addEventListener('click', () => {
             let modal = document.querySelector(`#${newNamesArray[i].name.first}-${newNamesArray[i].name.last}`)
             modal.style.display = 'none'
+         })
+
+         let prevBtn = newModal.querySelector('#modal-prev');
+
+         prevBtn.addEventListener('click', () => {
+            let modal = document.querySelector(`#${newNamesArray[i].name.first}-${newNamesArray[i].name.last}`);
+            if (modal.previousElementSibling.previousElementSibling) {
+               modal.style.display = 'none'
+               let prevModal = modal.previousElementSibling.previousElementSibling;
+               prevModal.style.display = 'block'; 
+               // modal = modal.previousElementSibling.previousElementSibling
+            }
+         })
+
+         let nextBtn = newModal.querySelector('#modal-next');
+
+         nextBtn.addEventListener('click', () => {
+            let modal = document.querySelector(`#${newNamesArray[i].name.first}-${newNamesArray[i].name.last}`);
+            if (modal.nextElementSibling) {
+               modal.style.display = 'none'
+               let nextModal = modal.nextElementSibling.nextElementSibling;
+               nextModal.style.display = 'block';
+               // modal = modal.nextElementSibling.nextElementSibling
+            }
          })
 
          gallery.appendChild(newModal)
